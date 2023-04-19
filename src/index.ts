@@ -82,17 +82,26 @@ async function transformMarkdownFiles(
 			}
 
 			const outputPath = path.join(destinationFolder, `${date}.md`);
-			const fileContent = files
-				.map(({ title, content }) => {
-					const formattedContent = content.split('\n');
-
-					return `- ## ${title} #journal\n${formattedContent.join('\t- ')}\n`;
-				})
-				.join('\n');
+			const fileContent = files.map(parseFileContent).join('\n');
 			await fs.writeFile(outputPath, fileContent);
 		}
 	}
 	console.groupEnd();
+}
+
+function parseFileContent({ title, content }: MarkdownFile) {
+	const paragraphs = content.split('\n\n');
+	const formattedContent = paragraphs
+		.map((paragraph) => {
+			const lines = paragraph
+				.split('\n')
+				.map((line) => line.trim())
+				.filter((line) => line.length > 0);
+			return `\t- ${lines.join('\n\t')}`;
+		})
+		.join('\n');
+
+	return `- ## ${title} #journal\n${formattedContent}`;
 }
 
 // eslint-disable-next-line unicorn/no-unreadable-array-destructuring
