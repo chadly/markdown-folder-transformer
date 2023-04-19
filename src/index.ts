@@ -5,6 +5,7 @@ import path from 'path';
 type MarkdownFile = {
 	title: string;
 	content: string;
+	timestamp: string;
 };
 
 type MarkdownFiles = { [date: string]: MarkdownFile[] };
@@ -27,9 +28,9 @@ async function transformMarkdownFiles(
 			continue;
 		}
 
-		const [, date, , title] = matchResult;
+		const [, date, time, title] = matchResult;
 
-		if (!date || !title) {
+		if (!date || !title || !time) {
 			console.error(`Invalid file name format: ${fileName}`);
 			continue;
 		}
@@ -45,7 +46,24 @@ async function transformMarkdownFiles(
 		}
 
 		const content = fs.readFileSync(filePath, 'utf8');
-		files.push({ title, content });
+		const contentMatch = content.match(
+			/### \d{1,2}:\d{2} (?:am|pm)\n\n([\S\s]+?)\n---/
+		);
+
+		if (contentMatch) {
+			files.push({
+				title,
+				content: contentMatch[1] || content,
+				timestamp: date + time,
+			});
+		} else {
+			console.warn(`Failed to format content from: ${fileName}`);
+			files.push({
+				title,
+				content,
+				timestamp: date + time,
+			});
+		}
 	}
 
 	await fs.ensureDir(destinationFolder);
@@ -56,13 +74,20 @@ async function transformMarkdownFiles(
 
 		const files = parsedFiles[date];
 		if (files) {
+			// Sort files by timestamp
+			files.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+
 			for (const { title } of files) {
 				console.log(`- ${title}`);
 			}
 
 			const outputPath = path.join(destinationFolder, `${date}.md`);
 			const fileContent = files
-				.map(({ title, content }) => `- ## ${title}\n\t- ${content}\n`)
+				.map(({ title, content }) => {
+					const formattedContent = content.split('\n');
+
+					return `- ## ${title} #journal\n${formattedContent.join('\t- ')}\n`;
+				})
 				.join('\n');
 			await fs.writeFile(outputPath, fileContent);
 		}
