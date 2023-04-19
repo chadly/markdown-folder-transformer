@@ -1,0 +1,19 @@
+{
+  "singleQuote": false,
+  "jsxSingleQuote": false,
+  "endOfLine": "auto",
+  "trailingComma": "es5",
+  "semi": true,
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "useTabs": true,
+  "overrides": [
+    {
+      "files": "**/*.json",
+      "options": {
+        "parser": "json",
+        "useTabs": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/node18-strictest/tsconfig.json",
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"],
+
+  "compilerOptions": {
+    "noEmit": true,
+    "noImplicitAny": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedParameters": false,
+    "exactOptionalPropertyTypes": false
+  }
+}
