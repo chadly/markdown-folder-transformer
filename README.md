@@ -1,14 +1,26 @@
-# YouTube Transcript Downloader
+# Markdown Folder Transformer
 
-This is a Node.js command-line application that downloads the transcript for a YouTube video and saves it to a text file.
+Markdown Folder Transformer is a Node.js CLI tool to convert a folder of my Obsidian-flavored markdown files to Logseq-flavored.
+
+## Features
+
+- Combines multiple markdown files from the same day into a single file
+- Renames files with a specific date format
+- Extracts and formats the content from the source files
+- Orders the output files by date and time
 
 ## Usage
 
-Clone the repository and run:
+1. Install dependencies:
 
 ```bash
 npm install
-npm start -- --url https://www.youtube.com/watch?v=dQw4w9WgXcQ
 ```
 
-The transcript will be saved to a text file with the same name as the video ID, in the current working directory.
+2. Run the CLI tool with the source folder and destination folder as arguments:
+
+```bash
+npm start -- [sourceFolder] [destinationFolder]
+```
+
+This will transform the markdown files in the `sourceFolder` folder and output the transformed files into the `destinationFolder` folder.
