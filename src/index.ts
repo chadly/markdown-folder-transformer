@@ -97,7 +97,7 @@ function parseFileContent({ title, content }: MarkdownFile) {
 				.split('\n')
 				.map((line) => line.trim())
 				.filter((line) => line.length > 0);
-			return `\t- ${lines.join('\n\t')}`;
+			return `\t- ${lines.join('\n')}`;
 		})
 		.join('\n');
 
